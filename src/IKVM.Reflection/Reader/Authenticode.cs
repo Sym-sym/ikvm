@@ -77,7 +77,7 @@ namespace IKVM.Reflection.Reader
 			}
 			byte[] buf = br.ReadBytes(certificateTableLength - 8);
 
-			SignedCms cms = new SignedCms();
+            SignedCms cms = new SignedCms();
 			try
 			{
 				cms.Decode(buf);

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Text;
 
@@ -676,6 +677,7 @@ namespace IKVM.Reflection
 
         public Assembly LoadAssembly(RawModule module)
         {
+
             string refname = module.GetAssemblyName().FullName;
             Assembly asm = GetLoadedAssembly(refname);
             if (asm == null)
@@ -719,6 +721,11 @@ namespace IKVM.Reflection
 
         Assembly GetLoadedAssembly(string refname)
         {
+            //var fix = AppDomain.CurrentDomain.GetAssemblies();
+            //for(int z = 0; z < fix.Length; z++)
+            //{
+            //    assembliesByName.Add(GetSimpleAssemblyName(fix[z].FullName), fix[z]);
+            //}
             if (!assembliesByName.TryGetValue(refname, out var asm) && (options & UniverseOptions.DisableDefaultAssembliesLookup) == 0)
             {
                 var simpleName = GetSimpleAssemblyName(refname);
@@ -740,9 +747,11 @@ namespace IKVM.Reflection
         {
             var simpleName = GetSimpleAssemblyName(refname);
             foreach (var asm in dynamicAssemblies)
+            {
+                Console.WriteLine(asm.Name);
                 if (simpleName.Equals(asm.Name, StringComparison.OrdinalIgnoreCase) && CompareAssemblyIdentity(refname, false, asm.FullName, false, out var result))
                     return asm;
-
+            }
             return null;
         }
 
@@ -793,9 +802,11 @@ namespace IKVM.Reflection
         private Assembly DefaultResolver(string refname, bool throwOnError)
         {
             Assembly asm = GetDynamicAssembly(refname);
+            if (asm == null)
+                asm = LoadFile(AppDomain.CurrentDomain.GetAssemblies()
+                    .First(z => GetSimpleAssemblyName(z.FullName) == refname).Location);
             if (asm != null)
                 return asm;
-
 #if NETFRAMEWORK
 
 			string fileName;

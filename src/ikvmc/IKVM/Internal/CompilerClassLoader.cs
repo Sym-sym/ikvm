@@ -2551,8 +2551,11 @@ namespace IKVM.Internal
 
         internal static int Compile(string runtimeAssembly, string runtimeJniAssembly, List<CompilerOptions> optionsList)
         {
+            //标记1111
             try
             {
+                Console.WriteLine(Path.Combine(Path.GetDirectoryName(typeof(CompilerClassLoader).Assembly.Location), "IKVM.Runtime.dll"));
+                //标记2222
                 StaticCompiler.runtimeAssembly = StaticCompiler.LoadFile(runtimeAssembly ?? Path.Combine(Path.GetDirectoryName(typeof(CompilerClassLoader).Assembly.Location), "IKVM.Runtime.dll"));
                 StaticCompiler.runtimeJniAssembly = StaticCompiler.LoadFile(runtimeJniAssembly ?? Path.Combine(Path.GetDirectoryName(StaticCompiler.runtimeAssembly.Location), "IKVM.Runtime.JNI.dll"));
             }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ikvmc": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\Server\\grasscutter-1.3.1.jar"
+    }
+  }
+}

@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Linq;
 using IKVM.Reflection;
 
 namespace IKVM.Internal
@@ -260,9 +260,23 @@ namespace IKVM.Internal
             AssemblyName previousMatch = null;
             int previousMatchLevel = 0;
 
+            int i = 0;
             foreach (var asm in universe.GetAssemblies())
+            {
+                Console.WriteLine(asm.GetName());
+                Console.WriteLine(name);
+                Console.WriteLine(i);
+                i++;
                 if (Match(asm.GetName(), name, ref previousMatch, ref previousMatchLevel))
                     return asm;
+                var _asm = LoadFile(AppDomain.CurrentDomain.GetAssemblies()
+                    .First(z => z.GetName().Name == name.Name).Location);
+                if (_asm != null)
+                {
+                    Console.WriteLine("Resolved:" + name.Name);
+                    return _asm;
+                }
+            }
 
             if (previousMatch != null)
             {
@@ -288,6 +302,7 @@ namespace IKVM.Internal
             }
             else if (args.RequestingAssembly != null)
             {
+                //标记3333
                 return universe.CreateMissingAssembly(args.Name);
             }
             else
